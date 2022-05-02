@@ -1,0 +1,8 @@
+/* mininmum height dine kine bhane content badune bitikai yo ni badcha */
+/* vh deko since it is relative ra jaba broswer ko screen change huncha side bar ni change huncha */
+/* vw tai percentage ma ho */
+
+.custom-sidebar {
+
+    min-height: 90vh  !important;
+}
