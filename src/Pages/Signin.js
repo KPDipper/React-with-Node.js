@@ -111,7 +111,7 @@ const Signin = () => {
             </div>
             <center>
               <button
-                className="btn btn-lg btn-primary"
+                className=" form-control btn btn-lg btn-primary"
                 type="submit"
                 onClick={clickSubmit}
               >
@@ -119,6 +119,8 @@ const Signin = () => {
               </button>
             </center>
             <div className="mt-1">
+
+            <Link to ='/forgetpassword'>Forget Password</Link><br></br>
               Do not have account?<Link to="/signup">Register</Link>
             </div>
             <p className="mt-5 mb-3 text-muted">&copy; 2022–2025</p>

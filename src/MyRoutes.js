@@ -21,6 +21,9 @@ import Products_in_Admin_Page from "./Componenets/product/Products_in_Admin_Page
 import Navbar from "./Componenets/Navbar";
 import Footer from "./Componenets/Footer";
 import Product_Details from "./Componenets/product/Product_Details";
+import Deals from "./Pages/Deals";
+import ForgetPassword from "./Pages/ForgetPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 const MyRoutes = () => {
   return (
@@ -36,6 +39,11 @@ const MyRoutes = () => {
         <Route path="/email/confirmation/:token" element={<Confirm />} />
         {/* yo route hamile sendemail ko url bata lyako from backend */}
         <Route path='/product/details/:id' element={<Product_Details/>}/>
+        <Route path='/deals' element={<Deals/>}/>
+        <Route path='/forgetpassword' element={<ForgetPassword/>}/>
+
+        {/* //foreget password jun token pathauchyoum teslai ta resetpassword ma route define garchyou  */}
+        <Route path='/resetpassword/:token' element={<ResetPassword/>}/>
 
        {/* here yo tai admin le matra acces garna paucha after he is login  */}
         <Route path="/" element={<AdminRoute />}>

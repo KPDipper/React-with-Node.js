@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
 import AdminSidebar from "../AdminSidebar";
-import { getAllProducts } from "./productAPI";
+import { deletedProduct, getAllProducts } from "./productAPI";
 
 const Products_in_Admin_Page = () => {
   const [products, setProducts] = useState([]);
 
   const [limit, setLimit] = useState(4); //HERE PRODuct limit dlehuna ko lagi
+
+  const [error,setError] =useState('')
+  const [success,setSuccess]=useState('')
 
   useEffect(() => {
     getAllProducts().then((data) => {
@@ -16,20 +17,66 @@ const Products_in_Admin_Page = () => {
       } else {
         setProducts(data);
       }
-    });
-  }, []);
+    })
+    .catch(err=>console.log(err))
+  }, [success]);
+
+  const deletedproduct= (id) =>{
+    setSuccess('')
+    // e.preventDefault()
+    deletedProduct(id)
+    .then(data=>{
+        if(data.error){
+            setSuccess('')
+            setError(data.error)
+        }
+        else{
+            setError('')
+            setSuccess('Product Deleted successfully')
+            
+        }
+    })
+    .catch(err=>console.log(err))
+}
+
+
+  // to show error
+  const showError = () => {//yo tai backend ko validation error haru
+    if (error) {
+      return <div className="alert alert-danger">{error}</div>;//yo error display garne bhyo
+    } else {
+      return (
+        <div className="alert alert-danger" style={{ display: "none" }}></div>//display none gareko yedi sucess bhyo bhane so none garnu parcha pachi ko lagi
+      );
+    }
+    // return <div className='alert alert-danger' style={{display:error ? '' : 'none'}}>{error}</div>
+  };
+
+  // to show success/ user is added
+  const showSuccess = () => {//
+    if (success) {
+      return (
+        <div className="alert alert-success">
+          {success}
+        </div>
+      );
+    }
+  };
+  //here yeta samma register matra hunch abut nor verfication
+  //*
 
   return (
-    <div>
-      <Navbar />
-
+    <>
+      
+   {showError()}
+   {showSuccess()}
       <div className="container-fluid custom-row">
         <div className="row ">
           <div className="col-md-3">
             <AdminSidebar />
           </div>
           <div className="col-md-9">
-            <h3 className="my-3 text-center">Add Product</h3>
+            <h3 className="my-3 text-center"> Products</h3>
             <hr />
             <table className="table table-bordered text-center">
               <thead>
@@ -65,7 +112,10 @@ const Products_in_Admin_Page = () => {
                       <td>{item.count_in_Stock}</td>
                       <td>
                         <button className="btn btn-warning">
-                          View Details
+                          EDIT
+                        </button>
+                        <button className="btn btn-warning"  onClick={()=>deletedproduct(item._id)}>
+                         DELETE
                         </button>
                       </td>
                     </tr>
@@ -96,8 +146,8 @@ const Products_in_Admin_Page = () => {
         </div>
       </div>
 
-      <Footer />
-    </div>
+     
+    </>
   );
 };
 

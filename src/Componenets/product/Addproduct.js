@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import React, { useState, useEffect,useRef} from "react";//submit garda file clear hudena so ref le le tai path lai null garcha//aru bela 
 import AdminSidebar from "../AdminSidebar";
 import { getAllCategories } from "../category/categoryAPI";
 import { addProduct } from "./productAPI";
 
 const Addproduct = () => {
+
+
+  const file_ref= useRef()
+
+  const select_ref= useRef()//yesko path  null garna ko lagi yo duita bahyo refencrece diyera path null garne
   const [categories, setCategories] = useState([]); //sab categories tai array ma aucha//here yo tai backend ma apthuna ko lagi
+
   const [product, setProduct] = useState({
     product_name: "",
     product_price: "",
@@ -39,14 +43,14 @@ const Addproduct = () => {
         } else {
           
           setCategories(data); //success ko laagi now API bata   getAllCategories() aucha which data ta hami categories ma save garyou ra teslai ta hami tala display garcyou maping garera
-          setProduct({...product,formData:new FormData})
+          setProduct({...product,formData:new FormData})//??
         }
 
       })
       .catch((err) => console.log(err));
-  }, []); //categories change hudena products ma so ekchoti load bhaepachi pugcha
+  }, [success]); //categories change hudena products ma so ekchoti load bhaepachi pugcha
   //categories ma kei change na garnu prda kheri product ma as it exist a multiple options so page ekchoti load bhayepachi sabai  categories options ma dekhyae pugcha
-
+ //success bhaye pachi tai form data initilaze hunu parne
 
   const handleChange = (name) => (event) => {
 
@@ -65,13 +69,17 @@ const Addproduct = () => {
   };
 
 const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the product
+  setError('')
+  setSuccess(false)
   event.preventDefault()
   addProduct(formData)//here  formData pass garnu paryo //here use stateko product pass garne backend ma//here laready usestate ma cha so no need to convert to string
   .then(data=>{
     if(data.error){
+      setSuccess("")
       setError(data.error)
     }
     else{
+      setError("")
       setProduct({
         product_name: '',
         product_price: '',
@@ -80,6 +88,10 @@ const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the 
         count_in_Stock: '',
         category: ''
     })//here yedi success bhyepachi form khali hunu paryo so yeslai sab empty parne
+
+      file_ref.current.value =''
+      select_ref.current.value=''//here yo react kai mathod ho not that we created something it make that path empty
+
       setSuccess(true)
     }
   })
@@ -112,7 +124,7 @@ const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the 
 
   return (
     <div>
-      <Navbar />
+     
       {showError()}
       {showSuccess()}
       <div className="container-fluid custom-row">
@@ -166,6 +178,7 @@ const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the 
                 className="form-control mb-2"
                 id="category"
                 onChange={handleChange("category")}
+                ref={select_ref}
               >
                 <option>Choose Categories</option>
                 {
@@ -185,6 +198,7 @@ const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the 
                 type={"file"}
                 id="product_image"
                 onChange={handleChange('product_image')}
+                ref={file_ref}
 
               />
 
@@ -196,7 +210,7 @@ const clickSubmit = event=>{//here submit garna ko lagi ho after we add all the 
         </div>
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

@@ -4,8 +4,6 @@ import React, { useState, useEffect } from "react";
 
 import { isAuthenticated } from "../auth";
 import { addCategory,deleteCategory,getAllCategories } from "./categoryAPI";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
 import AdminSidebar from "../AdminSidebar";
 import { useNavigate } from "react-router-dom";
 
@@ -113,7 +111,7 @@ const Category = () => {
 
   return (
     <>
-      <Navbar />
+     
       <div className="row">
         <div className="col-md-3">
           <AdminSidebar />
@@ -174,7 +172,7 @@ const Category = () => {
         </div>
       </div>
 
-      <Footer />
+      
     </>
   );
 };

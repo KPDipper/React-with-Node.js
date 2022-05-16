@@ -54,3 +54,44 @@ export const getProductDetails=(id)=>{
   .then(res=>res.json())
   .catch(error=>console.log(error))
 }
+
+//to get related products
+
+export const getRelatedProducts=(id)=>{
+
+  return fetch(`${API}/getrelatedproducts/${id}`,{
+    method:"GET"
+  })
+  .then(res=>res.json())
+  .catch(error=>console.log(error))
+}
+
+//to get filtered products:
+
+export const getFilteredProducts=(sortBy,order,limit,skip,{filters})=>{
+
+  let data={skip,filters}
+
+  return fetch(`${API}/getfilteredproducts?limit=${limit}`,{
+    method:"POST",
+    headers:{
+      Accept: "application/json",
+      "Content-type":"application/json"
+    },
+    body:JSON.stringify(data)
+  })
+  .then(res=>res.json())
+  .catch(error=>console.log(error))
+
+}
+
+//to delete producte
+
+export const deletedProduct=(id)=>{
+
+  return fetch(`${API}/deleteproduct/${id}`,{
+    method:"DELETE"
+  })
+  .then(res=>res.json())
+  .catch(error=>console.log(error))
+}

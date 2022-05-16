@@ -1,4 +1,4 @@
-// import { API } from "../../config";
+import { API } from "../../config";
 
 //API:http://localhost:5000/api
 
@@ -69,5 +69,42 @@ export const signout=(next)=>{
  
     })
     .then(res=>console.log('signout',res))
+    .catch(error=>console.log(error))
+}
+
+
+//forget password:
+
+//forget password
+export const forgetpassword = (email) => {//here we need email for to reset password//token matra pathune ho //to confirm email//reset garna ko lagi token pathunu pryo teti ho
+    return fetch(`http://localhost:5000/api/forgetpassword`,{
+        method:"POST",
+        headers:{
+            Accept:"application/json",
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({email})
+})
+    .then(res=>res.json())
+    .catch(error=>console.log(error))
+}
+
+
+//reset password:token tai url bata linu paryo jaba hami forget password ma click garchyou tei bhayeko url ma token cha teslai line
+//tei token 
+
+export const resetpassword=(token,email,new_password)=>{
+
+    const data={email,new_password}
+    return fetch(`http://localhost:5000/api/resetpassword/${token}`,{
+
+    method:"POST",
+    headers:{
+        Accept:"application/json",
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify(data)
+    })
+    .then(res=>res.json())
     .catch(error=>console.log(error))
 }

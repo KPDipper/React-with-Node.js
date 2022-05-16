@@ -29,9 +29,11 @@ const Products_in_Users_Page = () => {
                  }
                  </div>
                  <div className="text-center">
-
-                 <button className="btn btn-warning" onClick={()=>setLimit(limit+2)}>Show More</button>
-                 <button className="btn btn-danger" onClick={()=>setLimit(limit-2)}>Show Less</button>
+            
+                 <button className="btn btn-warning" onClick={()=>setLimit(limit+4)}>Show More</button>
+                 {limit>4 &&
+                 <button className="btn btn-danger" onClick={()=>setLimit(limit-4)}>Show Less</button>
+                 }
 
                  </div>
 

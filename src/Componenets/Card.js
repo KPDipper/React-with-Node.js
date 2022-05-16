@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const Card = ({props}) => {//sorted order limit products ko default value yeta ayera bascha
     //here props lai object bnayera linu paryo
+    console.log(props)
   return (
     <>
       <div className="col">
