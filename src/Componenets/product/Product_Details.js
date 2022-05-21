@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { addItemsToCart } from "../../Reducer/cartActions";
 import { isAuthenticated } from "../auth";
 import RelatedProducts from "../RelatedProducts";
 import { getProductDetails } from "./productAPI";
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux'
+
+
 
 const Product_Details = () => {
   //to accessed throught object
+  const dispatch = useDispatch()
   const params = useParams(); //params ma tai id ai racha not the whole product
   const [product, setProduct] = useState({}); //here since single product aucha so we use object instead of array
 
@@ -27,8 +34,17 @@ const Product_Details = () => {
       .catch((err) => console.log(err));
   }, [params]);
 
+
+    const addToCart=()=>{
+
+   dispatch(addItemsToCart(params.id,1))   //yo cart action ko function ho//here hami product details ma gaeya add to cart garcyoum tesko id chayio tesaile params.id use garchyoum
+    toast.success('Item added to cart')//here add items garyo bhane yo call huncha
+
+    }
+   
   return (
     <>
+    <ToastContainer position='top-center' theme='colored'/>
       <div className="container w-75 my-5 mx-auto shadow-lg p-5">
         <div className="row">
           <div className="col-md-6">
@@ -61,7 +77,7 @@ const Product_Details = () => {
                 <button className="btn btn-danger">Remove Product</button>
               </>
               :
-              <button className="btn btn-warning">Add to Cart</button>
+              <button className="btn btn-warning" onClick={addToCart}>Add to Cart</button>
             }
 
           </div>

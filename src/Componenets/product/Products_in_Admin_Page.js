@@ -10,6 +10,8 @@ const Products_in_Admin_Page = () => {
   const [error,setError] =useState('')
   const [success,setSuccess]=useState('')
 
+
+
   useEffect(() => {
     getAllProducts().then((data) => {
       if (data.error) {
@@ -20,6 +22,7 @@ const Products_in_Admin_Page = () => {
     })
     .catch(err=>console.log(err))
   }, [success]);
+  
 
   const deletedproduct= (id) =>{
     setSuccess('')
@@ -127,7 +130,7 @@ const Products_in_Admin_Page = () => {
                       <td colSpan={5}>
                         <button
                           className="btn btn-warning"
-                          onClick={() => setLimit(limit + 2)}
+                          onClick={() => setLimit(limit + 4)}
                         >
                           Load more
                         </button>

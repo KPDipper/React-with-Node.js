@@ -95,3 +95,18 @@ export const deletedProduct=(id)=>{
   .then(res=>res.json())
   .catch(error=>console.log(error))
 }
+
+export const updateProduct=(id,newproduct)=>{
+
+  return fetch(`${API}/updateproduct/${id}`,{
+    method:"PUT",
+    headers:{
+      Accept:"application/json",
+      "Content-type":"application/json"
+    },
+    body:JSON.stringify(newproduct)
+  })
+  .then(res=>res.json())
+  .catch(error=>console.log(error))
+
+}
