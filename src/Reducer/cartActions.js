@@ -1,6 +1,6 @@
 import { API } from "../config"
 import axios from 'axios'
-import {ADD_TO_CART, REMOVE_TO_CART} from './cartConstants'
+import {ADD_TO_CART, REMOVE_TO_CART,SAVE_SHIPPING_INFO} from './cartConstants'
 
 
 //button le yo function call garcha
@@ -41,3 +41,13 @@ export const removeItemFromCart = (id)=> async(dispatch,getState)=>{
     })
     localStorage.setItem('cart_items',JSON.stringify(getState().cart.cart_items))//j baki cha teslai localstorage ma save garnu paryo
 }//here baki value localstroage ma set gareko
+
+export const saveShippingInfo = (shipping_info) => async (dispatch, getState) => {
+    dispatch({
+        type: SAVE_SHIPPING_INFO,
+        payload:{
+            shipping_info:shipping_info
+        }
+    })
+    localStorage.setItem('shipping_info',JSON.stringify(getState().cart.shipping_info))
+}//here yo shippinginfo local storage ma save hunu paryo

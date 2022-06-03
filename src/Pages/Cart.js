@@ -8,7 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import "./Cart.css";
 import { useSelector ,useDispatch} from "react-redux";
-import { removeItemFromCart } from "../Reducer/cartActions";
+import { removeItemFromCart,addItemsToCart} from "../Reducer/cartActions";
+import { Link } from "react-router-dom";
+
+
 
 
 const Cart = () => {
@@ -30,11 +33,29 @@ const Cart = () => {
     toast.success(`${name} has been removed from the card`)
 
   }
+  const increaseInCart = (id, quantity, count_in_Stock)=>{
+    const new_quantity = quantity+1
+    if(new_quantity>count_in_Stock){
+        return;
+    }
+    dispatch(addItemsToCart(id, new_quantity))
+    toast.success(`count has been updated`)
+}
+
+const reduceFromCart = (id, quantity) => {
+  const new_quantity = quantity - 1
+  if(new_quantity == 0){
+      return;
+  }
+  dispatch(addItemsToCart(id, new_quantity))
+  toast.success(`count has been decreased`)
+}
 
   return (
     <>
       <ToastContainer/>
       <div className="container-sm mx-auto mt-3">
+      {/* <checkout_progress  confirmOrder={'confirmOrder'} /> */}
         <table className="table table-striped table-hover mytable text-center">
           <thead>
             <tr>
@@ -64,13 +85,13 @@ const Cart = () => {
                 </td>
                 <td>
                   <div className="row w-50 mx-auto">
-                    <button className="col btn btn-danger">-</button>
+                    <button className="col btn btn-danger" onClick={()=>reduceFromCart(item.product,item.quantity)}>-</button>
                     <input
                       type={"text"}
                       value={item.quantity}
                       className="col text-center"
                     />
-                    <button className="col btn btn-success">+</button>
+                    <button className="col btn btn-success" onClick={()=>increaseInCart(item.product,item.quantity,item.count_in_Stock)}>+</button>
                   </div>
                 </td>
                 <td>
@@ -81,6 +102,11 @@ const Cart = () => {
                 </td>
               </tr>
             ))}
+
+           <tr>
+            <td><Link to='/checkout'><button>Proceed to Checkout</button></Link></td>
+            </tr>
+            
           </tbody>
         </table>
       </div>

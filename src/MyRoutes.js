@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // import App from './App'
 import Home from "./Pages/Home";
@@ -24,62 +24,86 @@ import Product_Details from "./Componenets/product/Product_Details";
 import Deals from "./Pages/Deals";
 import ForgetPassword from "./Pages/ForgetPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import Checkout from "./Pages/Checkout";
+import Shipping from "./Pages/Shipping";
+import Payment from "./Pages/Payment";
+import { API } from "./config";
+
+//payment ko lagi
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+import PaymentElement from "./Pages/PaymentElement";
 
 const MyRoutes = () => {
+ 
+
   return (
     <>
-   
-    <BrowserRouter>
-    <Navbar/>
+      <BrowserRouter>
+        <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/email/confirmation/:token" element={<Confirm />} />
-        {/* yo route hamile sendemail ko url bata lyako from backend */}
-        <Route path='/product/details/:id' element={<Product_Details/>}/>
-        <Route path='/deals' element={<Deals/>}/>
-        <Route path='/forgetpassword' element={<ForgetPassword/>}/>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/email/confirmation/:token" element={<Confirm />} />
+          {/* yo route hamile sendemail ko url bata lyako from backend */}
+          <Route path="/product/details/:id" element={<Product_Details />} />
+          <Route path="/deals" element={<Deals />} />
+          <Route path="/forgetpassword" element={<ForgetPassword />} />
 
-        {/* //foreget password jun token pathauchyoum teslai ta resetpassword ma route define garchyou  */}
-        <Route path='/resetpassword/:token' element={<ResetPassword/>}/>
+          {/* //foreget password jun token pathauchyoum teslai ta resetpassword ma route define garchyou  */}
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
 
-       {/* here yo tai admin le matra acces garna paucha after he is login  */}
-        <Route path="/" element={<AdminRoute />}>
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/category" element={<Category/>}/>
-          {/* yo admin le matra herna paucha user le tai mildena herna */}
+          {/* here yo tai admin le matra acces garna paucha after he is login  */}
+          <Route path="/" element={<AdminRoute />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/category" element={<Category />} />
+            {/* yo admin le matra herna paucha user le tai mildena herna */}
 
-          <Route path='/admin/categoryupdate/:id' element={<CategoryUpdate/>}/>
-          {/* only admin can update category */}
-          <Route path='/admin/product/add' element={<Addproduct/>}/>
-          <Route path='/admin/products' element={<Products_in_Admin_Page/>}/>
+            <Route
+              path="/admin/categoryupdate/:id"
+              element={<CategoryUpdate />}
+            />
+            {/* only admin can update category */}
+            <Route path="/admin/product/add" element={<Addproduct />} />
+            <Route
+              path="/admin/products"
+              element={<Products_in_Admin_Page />}
+            />
+          </Route>
 
+          {/* here yo tai user le matra acces garna paucha after he is login  */}
 
-        </Route>
-
-              {/* here yo tai user le matra acces garna paucha after he is login  */}
-
-        <Route path="/" element={<PrivateRoute />}>
-          <Route path="/user/profile" element={<UserDashboard />} />
-          <Route path="/cart" element={<Cart />} />
-          {/* now if user is not login and try to access the cart pages then it will redirect to sign in pages */}
-          {/* jasto cart ma click garyo tara login hunu paryo login cha bhane cart mai jancha outlet bhakeo tyo ho
+          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/user/profile" element={<UserDashboard />} />
+            <Route path="/cart" element={<Cart />} />
+            {/* now if user is not login and try to access the cart pages then it will redirect to sign in pages */}
+            {/* jasto cart ma click garyo tara login hunu paryo login cha bhane cart mai jancha outlet bhakeo tyo ho
             login chaina bhane sign in ma lagidine */}
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/payment" element={<PaymentElement />} />
 
-        </Route>
-        
-        
+            {/* here element tai credit card ko informations bhyo(card number,expire) nad if they load only they should show the route */}
+            
+             {/* {stripeApiKey && (
+              <Elements stripe={loadStripe(stripeApiKey)}>
+               
+             
 
-       
-        <Route path="/showdata" element={<Data />} />
-        <Route path="/fetchdata" element={<Fetchdata />} />
-        <Route path="/text" element={<Main />} />
-      </Routes>
-      <Footer/>
-    </BrowserRouter>
-  
+              </Elements>
+            )} */}
+            
+          </Route>
+
+          <Route path="/showdata" element={<Data />} />
+          <Route path="/fetchdata" element={<Fetchdata />} />
+          <Route path="/text" element={<Main />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </>
   );
 };
