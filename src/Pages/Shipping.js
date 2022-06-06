@@ -46,6 +46,8 @@ const Shipping = () => {
   const calculate_total_price = () => {
     let prices = cart_items.map((item) => item.quantity * item.product_price);
     let total_price = prices.reduce((acc, cur) => acc + cur);
+    sessionStorage.setItem('orderInfo', JSON.stringify(total_price))
+
     return total_price;
   };
 
@@ -57,8 +59,7 @@ const Shipping = () => {
   //   return dispatch(saveShippingInfo(shippingAddress));
   // };
 
-  const saveShippingInfoHandler = () => {
-    sessionStorage.setItem('orderInfo', JSON.stringify(calculate_total_price()))
+  const saveShippingInfoHandler = () => {//shipping address save localstorage ma
     return dispatch(saveShippingInfo(shippingAddress))
 }
 

@@ -10,7 +10,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { useElements } from "@stripe/react-stripe-js";
 import { isAuthenticated } from "../Componenets/auth";
-import { toast } from 'react-toastify'
+import { toast,ToastContainer  } from 'react-toastify'
+import { API } from '../config'
+import axios from 'axios'
 
 
 //use navigate garda ni huncha ki return navigate
@@ -18,12 +20,14 @@ import { toast } from 'react-toastify'
 const Payment = () => {
 
   //here only user can do itisAuthenticated()
-const {user,token} = isAuthenticated
+const {user,token} = isAuthenticated()//sigin in hunu paryo ra user hunu paryo check garcha
 
-//stripe ra element ni eta chaincha
+//stripe ra element ni eta chaincha to load card
 const stripe=useStripe()
 const elements= useElements()
+const navigate=useNavigate()
 
+//styling gareko
   let options = {
     style:{
       base:{
@@ -34,9 +38,11 @@ const elements= useElements()
       }
     }
   };
-  let orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  const { cart_items, shipping_info } = useSelector((state) => state.cart);
 
+  let orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));//session storage ma bhayeko orderinfo (shipping garda)
+console.log(orderInfo)
+  const { cart_items, shipping_info } = useSelector((state) => state.cart);//yo tai reducers leoo cart_items ra shipping_info
+ 
   const shipping = shipping_info.shipping_info;
   const calculate_total_price = () => {
     let prices = cart_items.map((item) => item.quantity * item.product_price);
@@ -44,23 +50,42 @@ const elements= useElements()
     return total_price;
   };
 
+  //yo shipping address ko lagi
+
+  const order= {
+    orderItems:cart_items,
+    shippingAddress1: shipping_info.shippingAddress1,
+    shippingAddress2: shipping_info.shippingAddress2,
+    city:shipping_info.city,
+    zip:shipping_info.zip,
+    country:shipping_info.country,
+    phone:shipping_info.phone,
+    user: user._id
+}
+
+
+const paymentData = { amount : orderInfo*100    }
+
+
   const paymentHandle = async (e) => {
-    e.preventDefault()
+    e.preventDefault()//default acting rokhnu paryo
     document.querySelector('#pay_btn').disabled = true //selecting the button, disable
     let res
     try{                                               // to attempt payment
         const config= {                                // to connect with backend
             headers: {
                 'Content-Type':"application/json",
-                Authorization: "Bearer ${token}"
+                // Authorization: "Bearer ${token}"
             }
         }
-        res = await axios.post('${API}/processpayment',paymentData, config)
-        if(!stripe || !Elements){
+        res = await axios.post(`${API}/processpayment`,paymentData, config)//yo backend bata feth gareko ho
+        const client_secret = res.data.client_secret//payment success bhyo bhane backend bata client secret//ra sucess ni return huncha/res ma data aucha data ma client secret aucha
+
+        if(!stripe || !elements){
             return
         }
         // make payment, 
-        const result = await stripe.confirmCardPayment('${client_secret}',{
+        const result = await stripe.confirmCardPayment(`${client_secret}`,{//stripe ko mayent ko confirm ko lagi client secret pass garnu paryo ra payment method ho
             payment_method: {
                 card: elements.getElement(CardNumberElement),
                 billing_details:{
@@ -68,20 +93,21 @@ const elements= useElements()
                     email: user.email
                 }
             }
-        })
-        if(result.error){
-            toast.error(result.error.message)
-            document.querySelector('#pay_btn').disabled = false
+        })//yedi methid ma error ayo
+        if(result.error){//card haru ko number milena bhane atawa expire bhyo bhane kolagi
+            toast.error(result.error.message)//error ayo bhane toast ma dekhaunu paryo
+            document.querySelector('#pay_btn').disabled = false//yedi error ayo bhane buttom abled garne so feri payment garna ko lagi
         }
-        else{
+        else{//yedi error ayena bhane status check garnu paryo
             if(result.paymentIntent.status==='succeeded'){
-                // order.paymentInfo ={
-                //     id: result.paymentIntent.id,
-                //     status: result.paymentIntent.status
-                // }
+                order.paymentInfo ={//yedi payment success bhyo bhane
+                    id: result.paymentIntent.id,//result bitra aucha payment intend
+                    status: result.paymentIntent.status
+                }
                 // dispatchEvent(createOrder(order))
-                localStorage.removeItem('cart_items')
-                return <Navigate to='/payment_success'/>
+                localStorage.removeItem('cart_items')//sucess bhaye pachi localstorage hatune
+                // return <Navigate to='/payment_success'/>
+                navigate('/paymentsucccess')
             }
             else{
                 toast.error('error while processing')
@@ -97,6 +123,7 @@ const elements= useElements()
 
   return (
     <>
+            <ToastContainer theme='colored'/>
       <div className="row">
         <div className="col-md-9 p-5">
           <Checkout_progress confirmOrder Shipping Payment />

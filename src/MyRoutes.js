@@ -34,6 +34,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import PaymentElement from "./Pages/PaymentElement";
+import PaymentSuccess from "./Pages/PaymentSuccess";
 
 const MyRoutes = () => {
  
@@ -85,6 +86,7 @@ const MyRoutes = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/payment" element={<PaymentElement />} />
+            <Route path="/paymentsuccess" element={<PaymentSuccess/>}/>
 
             {/* here element tai credit card ko informations bhyo(card number,expire) nad if they load only they should show the route */}
             
